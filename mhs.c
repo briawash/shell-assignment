@@ -109,7 +109,8 @@ int main()
     // \TODO Remove this code and replace with your shell functionality
 
     int i = 0;
-    for( i = 0; i< 255; i++ ) {
+    for( i = 0; i< 255; i++ ) 
+    {
       history[0][i]='\0';
       history[1][i]='\0';
       history[2][i]='\0';
@@ -129,23 +130,27 @@ int main()
 
   
    //make sure the string is not empty
-  if(token[0]=='\0'){
+  if(token[0]=='\0')
+  {
       catch=1;
       histNum--;  
   }
   //if its not NULL 
-  if(catch!=1){
+  if(catch!=1)
+  {
     // find the command but 
     val=findCmd(cmd_str);
     // the user wants to quit
-    if (val== -1){
+    if (val== -1)
+    {
       return 0;
     }
     
     found=histNum%50 -1;
     strncpy(history[found],cmd_str, strlen(cmd_str+1));
   }
-  else{
+  else
+  {
     // reset the catch
       catch=0;
   }
@@ -155,7 +160,8 @@ int main()
   return 0;
 }
 
-int findCmd(char *cmd_str){
+int findCmd(char *cmd_str)
+{
     int i, num;
    /* Parse input */
     char *token[MAX_NUM_ARGUMENTS];
@@ -184,53 +190,66 @@ int findCmd(char *cmd_str){
       }
         token_count++;
     }
-    for(i=0;i<50;i++){
+    for(i=0;i<50;i++)
+    {
       currentDirectory[i]='\0';
     }
     getcwd(currentDirectory,50);
     // go through and find the command 
     // then execute them
-    if(strcmp(token[0],"history")==0){
+    if(strcmp(token[0],"history")==0)
+    {
       
-      for (i=0;i<50;i++){
-        if (i==histNum-1){
+      for (i=0;i<50;i++)
+      {
+        if (i==histNum-1)
+	{
           break;
         }
         printf("%d: %s\n",i+1, history[i] );
       }
 
     }
-    else if(strcmp(token[0] ,"cd")==0){
+    else if(strcmp(token[0] ,"cd")==0)
+    {
       cdCommand(token[1]);
     }
    
-    else if(strcmp(token[0] ,"listpids")==0){
+    else if(strcmp(token[0] ,"listpids")==0)
+    {
       printf("listpids Command");
       listPids();
     }
-     else if(strcmp(token[0],"bg")==0){
+     else if(strcmp(token[0],"bg")==0)
+     {
        sigStuff(1);
     }
-    else if(strcmp(token[0],"exit")==0){
+    else if(strcmp(token[0],"exit")==0)
+    {
       return -1;
       
     }
-     else if(strcmp(token[0],"quit")==0){
+     else if(strcmp(token[0],"quit")==0)
+     {
       return -1;
       
     }
   
-    else if(strcmp(token[0],"cltrl-z")==0){
+    else if(strcmp(token[0],"cltrl-z")==0)
+    {
        sigStuff(2);
       
     }
-     else if(*token[0]=='!'){
+     else if(*token[0]=='!')
+     {
        peice=strtok(token[0],"!");
        num=atoi(peice);
-        if(num>histNum){
+        if(num>histNum)
+	{
           printf("Command not in history.");
         }
-        else{
+        else
+	{
           findCmd(history[num-1]);
         }  
       
@@ -239,7 +258,8 @@ int findCmd(char *cmd_str){
      sigStuff(3);
       
     }
-    else{
+    else
+    {
 
       execFunc(token[0], token);
       
@@ -250,7 +270,8 @@ return 0;
 /*
 This function finds the comman
 */
- void execFunc( char *cmd, char** args){
+ void execFunc( char *cmd, char** args)
+ {
 
   int token=0,i;
   pid_t child_pid;
@@ -263,7 +284,8 @@ This function finds the comman
   pastpids[numpids%15]=(int)child_pid;
   numpids++;
 
-  for(i=0;i<10;i++){
+  for(i=0;i<10;i++)
+  {
     command[i]='\0';
     path[i]='\0';
     path[10+i]='\0';
@@ -285,7 +307,8 @@ This function finds the comman
     {
        retval=execvp(path, args  );
        if(retval<0){
-        for(i=0;i<10;i++){
+        for(i=0;i<10;i++)
+	{
       
            path[i]='\0';
           path[10+i]='\0';
@@ -297,9 +320,11 @@ This function finds the comman
 
 
          retval=execvp(path, args  );
-         if(retval<0){
+         if(retval<0)
+	 {
           
-          for(i=0;i<10;i++){
+          for(i=0;i<10;i++)
+	  {
             path[i]='\0';
             path[10+i]='\0';
             path[20+i]='\0';
@@ -308,7 +333,8 @@ This function finds the comman
         strcpy(path, binDir);
         strcat(path, command);
           retval=execvp(path,args);
-          if(retval<0){
+          if(retval<0)
+	  {
             printf("%s : Command not found\n", command);
           }
          }
@@ -323,7 +349,8 @@ This function finds the comman
 
 //
 //
-void cdCommand(char *new){
+void cdCommand(char *new)
+{
 
 char* temp;
 int status,length,i; 
@@ -331,24 +358,28 @@ int status,length,i;
   temp=strtok(new,"\n");
   status= chdir(new);
   //back out of the directory
-  if(strcmp(new, "..")==0){
+  if(strcmp(new, "..")==0)
+  {
     //sep the last / off
      //currentDirectory=
     length=strlen(currentDirectory);
     i=length-1;
     //cut off the current file path
-    while(currentDirectory[i]!='/'){
+    while(currentDirectory[i]!='/')
+    {
       currentDirectory[i]='\0';
       i--;
     }
     // actually change directory
     chdir(currentDirectory);
   }
-  if (status==0){
+  if (status==0)
+  {
     // 
     strcat(currentDirectory,new);
   }
-  else{
+  else
+  {
       //we didnt find anythinhg
       printf("%s: location not found",new);
   }
@@ -358,37 +389,44 @@ int status,length,i;
 
 
 }
-void listPids(){
+void listPids()
+{
 
   int i=numpids%15, count=1;
   //print the the pids out
-  while(i==(numpids%15 -1) ||i==14){
+  while(i==(numpids%15 -1) ||i==14)
+  {
     printf("%d: %d\n",count, pastpids[i]  );
     i++;
     count++;
   }
   i=0;
 
- while(i!=numpids%15){
+ while(i!=numpids%15)
+ {
   // print the remaining 
   printf("%d: %d\n",count, pastpids[i] );
   i++;
  count++;
  }
 } 
-void sigStuff(int choice){
+void sigStuff(int choice)
+{
   //bg
-  if (choice==1){
+  if (choice==1)
+  {
    
 
   }
   //C
-  else if(choice ==2){
+  else if(choice ==2)
+  {
     kill(pastpids[numpids%15],SIGSTOP);
 
   }
   //Z
-  else if(choice==3){
+  else if(choice==3)
+  {
     kill(pastpids[numpids%15],SIGSTOP);
 
 
